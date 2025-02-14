@@ -1,13 +1,11 @@
 package com.project.adoptpet.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Getter

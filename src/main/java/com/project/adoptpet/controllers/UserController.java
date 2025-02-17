@@ -14,14 +14,21 @@ public class UserController {
     UserRepository userRepository;
 
     @GetMapping("/users")
-    public List<Users> getAllUsers() {
-        return userRepository.findAll();
+    public List<Users> getAllUsers(@RequestParam(required = false) String name,
+                                   @RequestParam(required = false) String role,
+                                   @RequestParam(required = false) Integer id) {
+        if(name != null){
+            return userRepository.findByName(name);
+        }else if(role != null){
+            return userRepository.findByRole(role);
+        }else if(id != null){
+            return userRepository.findById(id).map(List::of).orElse(null);
+        }
+        else {
+            return userRepository.findAll();
+        }
     }
 
-    @GetMapping("/usersByName/{name}")
-    public List<Users> getUsersByName(@PathVariable("name") String name) {
-        return userRepository.findByName(name);
-    }
 
     @PostMapping("/addUser")
     public void addUser(@RequestBody Users user) {
@@ -32,10 +39,4 @@ public class UserController {
     public void deleteUserById(@PathVariable("id") int id) {
         userRepository.deleteById(id);
     }
-
-    @GetMapping("/usersByRole/{role}")
-    public List<Users> getUserByRole(@PathVariable("role") String role) {
-        return userRepository.findByRole(role);
-    }
-
 }

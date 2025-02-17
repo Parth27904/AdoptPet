@@ -14,8 +14,23 @@ public class PetController {
     PetRepository petRepository;
 
     @GetMapping("/pets")
-    public List<Pet> getAllPets() {
-        return petRepository.findAll();
+    public List<Pet> getAllPets(@RequestParam(required = false) String name,
+                                @RequestParam(required = false) String breed,
+                                @RequestParam(required = false) String type,
+                                @RequestParam(required = false) String status) {
+
+        if(name != null){
+            return petRepository.findByName(name);
+        }else if(breed != null){
+            return petRepository.findByBreed(breed);
+        }else if(type != null){
+            return petRepository.findByType(type);
+        }else if(status != null) {
+            return petRepository.findByStatus(status);
+        }
+        else{
+            return petRepository.findAll();
+        }
     }
 
     @PostMapping("/addPet")
@@ -23,29 +38,9 @@ public class PetController {
         return petRepository.save(pet);
     }
 
-    @DeleteMapping("/pets/{id}")
+    @DeleteMapping("/deletePet/{id}")
     public void deletePetById(@PathVariable("id") int id) {
         petRepository.deleteById(id);
-    }
-
-    @GetMapping("/petsByName/{name}")
-    public List<Pet> getPetByName(@PathVariable("name") String name) {
-        return petRepository.findByName(name);
-    }
-
-    @GetMapping("/petsByBreed/{breed}")
-    public List<Pet> findByBreed(@PathVariable("breed") String breed) {
-        return petRepository.findByBreed(breed);
-    }
-
-    @GetMapping("/petsByType/{type}")
-    public List<Pet> findByType(@PathVariable("type") String type) {
-        return petRepository.findByType(type);
-    }
-
-    @GetMapping("/petsByStatus/{status}")
-    public List<Pet> findByStatus(@PathVariable("status") String status) {
-        return petRepository.findByStatus(status);
     }
 
 }

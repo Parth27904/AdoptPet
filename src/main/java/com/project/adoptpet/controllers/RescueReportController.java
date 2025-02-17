@@ -14,14 +14,21 @@ public class RescueReportController {
     RescueReportRepository rescueReportRepository;
 
     @GetMapping("/rescueReports")
-    public List<Rescue_Reports> getRescueReports() {
-        return rescueReportRepository.findAll();
+    public List<Rescue_Reports> getRescueReports(
+            @RequestParam(required = false) Integer id,
+            @RequestParam(required = false) String status
+    ) {
+        if (id != null) {
+            return rescueReportRepository.findById(id)
+                    .map(List::of)
+                    .orElse(null);
+        } else if (status != null) {
+            return rescueReportRepository.findByStatus(status);
+        } else {
+            return rescueReportRepository.findAll();
+        }
     }
 
-    @GetMapping("/rescueReports/{id}")
-    public Rescue_Reports getRescueReportsById(@PathVariable("id") int id) {
-        return rescueReportRepository.findById(id).orElse(null);
-    }
 
     @PostMapping("/addRescueReport")
     public void addRescueReport(@RequestBody Rescue_Reports rescue_report) {
@@ -31,11 +38,6 @@ public class RescueReportController {
     @DeleteMapping("/deleteRescueReport/{id}")
     public void deleteRescueReportById(@PathVariable("id") int id) {
         rescueReportRepository.deleteById(id);
-    }
-
-    @GetMapping("/rescueReportsByStatus/{status}")
-    public List<Rescue_Reports> findRescueReportByStatus(@PathVariable("status") String status) {
-        return rescueReportRepository.findByStatus(status);
     }
 
 }

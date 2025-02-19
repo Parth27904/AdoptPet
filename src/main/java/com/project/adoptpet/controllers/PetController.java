@@ -3,44 +3,52 @@ package com.project.adoptpet.controllers;
 import com.project.adoptpet.models.Pet;
 import com.project.adoptpet.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class PetController {
 
     @Autowired
-    PetRepository petRepository;
+    private PetRepository petRepository;
 
     @GetMapping("/pets")
-    public List<Pet> getAllPets(@RequestParam(required = false) String name,
-                                @RequestParam(required = false) String breed,
-                                @RequestParam(required = false) String type,
-                                @RequestParam(required = false) String status) {
+    public String getAllPets(@RequestParam(required = false) String name,
+                             @RequestParam(required = false) String breed,
+                             @RequestParam(required = false) String type,
+                             @RequestParam(required = false) String status,
+                             Model model) {
 
-        if(name != null){
-            return petRepository.findByName(name);
-        }else if(breed != null){
-            return petRepository.findByBreed(breed);
-        }else if(type != null){
-            return petRepository.findByType(type);
-        }else if(status != null) {
-            return petRepository.findByStatus(status);
-        }
-        else{
-            return petRepository.findAll();
-        }
+        name = (name != null && name.isEmpty()) ? null : name;
+        breed = (breed != null && breed.isEmpty()) ? null : breed;
+        type = (type != null && type.isEmpty()) ? null : type;
+        status = (status != null && status.isEmpty()) ? null : status;
+
+        List<Pet> pets = petRepository.searchPets(name, breed, type, status);
+
+        model.addAttribute("pets", pets);
+        return "pets";
+    }
+
+
+    @GetMapping("/addPet")
+    public String showAddPetPage(Model model) {
+        model.addAttribute("pet", new Pet());
+        return "add_pets";
     }
 
     @PostMapping("/addPet")
-    public Pet addPet(@RequestBody Pet pet) {
-        return petRepository.save(pet);
+    public String addPet(@ModelAttribute Pet pet) {
+        petRepository.save(pet);
+        return "redirect:/pets";
     }
 
-    @DeleteMapping("/deletePet/{id}")
-    public void deletePetById(@PathVariable("id") int id) {
+    @GetMapping("/deletePet/{id}")
+    public String deletePetById(@PathVariable("id") int id) {
         petRepository.deleteById(id);
+        return "redirect:/pets";
     }
-
 }

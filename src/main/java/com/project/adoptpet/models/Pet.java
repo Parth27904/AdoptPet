@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -24,6 +25,12 @@ public class Pet {
     private String image_url;
     private int center_id;
     private String status;
+
+    @Column(nullable = false, updatable = false)
     private Timestamp created_at;
 
+    @PrePersist
+    protected void onCreate() {
+        created_at = Timestamp.from(Instant.now());
+    }
 }

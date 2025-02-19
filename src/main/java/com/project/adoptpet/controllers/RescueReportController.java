@@ -13,7 +13,7 @@ public class RescueReportController {
     @Autowired
     RescueReportRepository rescueReportRepository;
 
-    @GetMapping("/rescueReports")
+    @GetMapping("/reports")
     public List<Rescue_Reports> getRescueReports(
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String status
@@ -30,12 +30,12 @@ public class RescueReportController {
     }
 
 
-    @PostMapping("/addRescueReport")
+    @PostMapping("/addReport")
     public void addRescueReport(@RequestBody Rescue_Reports rescue_report) {
         rescueReportRepository.save(rescue_report);
     }
 
-    @DeleteMapping("/deleteRescueReport/{id}")
+    @DeleteMapping("/deleteReport/{id}")
     public void deleteRescueReportById(@PathVariable("id") int id) {
         rescueReportRepository.deleteById(id);
     }

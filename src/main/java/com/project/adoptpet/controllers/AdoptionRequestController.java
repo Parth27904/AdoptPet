@@ -13,7 +13,7 @@ public class AdoptionRequestController {
     @Autowired
     AdoptionRequestRepository repository;
 
-    @GetMapping("/adoptionRequests")
+    @GetMapping("/requests")
     public List<Adoption_Requests> getAdoptionRequests(@RequestParam(required = false) Integer id,
                                                        @RequestParam(required = false) String status,
                                                        @RequestParam(required = false) Integer userId,
@@ -31,12 +31,12 @@ public class AdoptionRequestController {
         return repository.findAll();
     }
 
-    @PostMapping("/addAdoptionRequests")
+    @PostMapping("/addRequests")
     public Adoption_Requests addAdoptionRequest(@RequestBody Adoption_Requests request) {
         return repository.save(request);
     }
 
-    @DeleteMapping("/deleteAdoptionRequest/{id}")
+    @DeleteMapping("/deleteRequest/{id}")
     public void deleteAdoptionRequest(@PathVariable("id") int id) {
         repository.deleteById(id);
     }
